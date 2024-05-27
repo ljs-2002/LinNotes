@@ -1,0 +1,24 @@
+{
+  "name": "linnotes",
+  "version": "0.0.1",
+  "description": "desk notes software",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "electron": "nodemon --watch main.js --exec yarn start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ljs-2002/LinNotes.git"
+  },
+  "author": "ljs",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ljs-2002/LinNotes/issues"
+  },
+  "homepage": "https://github.com/ljs-2002/LinNotes#readme",
+  "dependencies": {
+    "electron": "^30.0.8"
+  }
+}
