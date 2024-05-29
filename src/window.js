@@ -1,15 +1,16 @@
 const {BrowserWindow} = require('electron')
 
-function createMainWindow(width=800, height=600, show=false, preload_dir, devTools=false, loadFile) {
+
+function createMainWindow({width, height, show, preload_dir, devTools, loadFile, ico}) {
     let mainWindow = new BrowserWindow({
         width: width,
         height: height,
         show: show,
+        icon: ico,
         webPreferences: {
             preload: preload_dir + '/preload.js',
         }
     })
-
     mainWindow.loadFile(loadFile)
     if (devTools){
         mainWindow.webContents.openDevTools()

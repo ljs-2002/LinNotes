@@ -1,6 +1,8 @@
 const {app,ipcMain} = require('electron/main')
 const {createMainWindow,createNotesWindow,createModelWindow,getWindowId} = require('./src/window.js')
-const {createMainMenu} = require('./src/menu.js')
+const {createMainMenu} = require('./src/menu')
+const {createTray} = require('./src/tray')
+const {MAIN_WINDOW_PARAM} = require('./config/param')
 
 const windowMap = new Map()
 let mainWindow = null
@@ -27,15 +29,21 @@ app.whenReady().then(() => {
         win=null
     })
     //创建主页面
-    mainWindow = createMainWindow(800, 600, false, __dirname, true, './renderer/mainPage.html')
+    mainWindow = createMainWindow(MAIN_WINDOW_PARAM)
     mainWindow.setMenu(createMainMenu(mainWindow,windowMap))
     mainWindowId = mainWindow.id
     windowMap.set(mainWindowId, mainWindow)
-    mainWindow.on('closed', () => {
-        // 将 mainWindow 设置为 null
-        windowMap.delete(mainWindowId)
-        mainWindow = null;
-    });
+    mainWindow.on('minimize', (event) => {
+        event.preventDefault()
+        mainWindow.hide()
+    })
+    mainWindow.on('close', (event) => {
+        event.preventDefault()
+        mainWindow.hide()
+    })
+
+    //创建托盘
+    let tray = createTray(mainWindow, './assets/icon.png', 'LinNotes')
 })
 
 app.on('window-all-closed', () => {
