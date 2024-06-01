@@ -9,23 +9,28 @@ let mainWindow = null
 let mainWindowId = 0
 
 app.whenReady().then(() => {
-    ipcMain.on('create-notes-window', () => {
-        console.log('recive create-notes-window')
-        win = createNotesWindow('./renderer/Notes.html')
+    ipcMain.handle('create-notes-window', () => {
+        win = createNotesWindow('./renderer/Notes.html',windowMap)
         windowMap.set(win.id, win)
+        return win.id
     })
-    ipcMain.on('create-model-window', () => {
-        console.log('recive create-model-window')
-        win = createModelWindow('./renderer/settings.html',mainWindow)
+    ipcMain.handle('create-model-window', () => {
+        win = createModelWindow('./renderer/settings.html',mainWindow,windowMap)
         windowMap.set(win.id, win)
+        return win.id
     })
     ipcMain.handle('get-window-id', (event) => {
         return getWindowId()
     })
-    ipcMain.on('close-window', (id) => {
+    ipcMain.handle('open-window', (event,id) => {
         let win = windowMap.get(id)
-        windowMap.delete(id)
+        win.show()
+    })
+    ipcMain.handle('delete-window', (event,id) => {
+        let win = windowMap.get(id)
+        win.removeAllListeners('close')
         win.close()
+        windowMap.delete(id)
         win=null
     })
     //创建主页面
@@ -33,14 +38,6 @@ app.whenReady().then(() => {
     mainWindow.setMenu(createMainMenu(mainWindow,windowMap))
     mainWindowId = mainWindow.id
     windowMap.set(mainWindowId, mainWindow)
-    mainWindow.on('minimize', (event) => {
-        event.preventDefault()
-        mainWindow.hide()
-    })
-    mainWindow.on('close', (event) => {
-        event.preventDefault()
-        mainWindow.hide()
-    })
 
     //创建托盘
     let tray = createTray(mainWindow, './assets/icon.png', 'LinNotes')

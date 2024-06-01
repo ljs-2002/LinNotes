@@ -15,6 +15,14 @@ function createMainWindow({width, height, show, preload_dir, devTools, loadFile,
     if (devTools){
         mainWindow.webContents.openDevTools()
     }
+    mainWindow.on('minimize', (event) => {
+        event.preventDefault()
+        mainWindow.hide()
+    })
+    mainWindow.on('close', (event) => {
+        event.preventDefault()
+        mainWindow.hide()
+    })
     mainWindow.once('ready-to-show',()=>{
         mainWindow.show()
     })
@@ -31,15 +39,15 @@ function createNotesWindow(loadFile,windowMap){
     notes.once('ready-to-show',()=>{
         notes.show()
     })
-    notes.once('closed',()=>{
-        windowMap.delete(notes.id)
-        console.log(`delete notes with id ${notes.id}`)
-        console.log(windowMap)
-        notes = null
+    notes.once('close',(event)=>{
+        event.preventDefault()
+        notes.hide()
+    })
+    notes.once('minimize',(event)=>{
+        event.preventDefault()
+        notes.hide()
     })
     windowMap.set(notes.id, notes)
-    console.log(`create notes with id ${notes.id}`)
-    console.log(windowMap)
     return notes
 }
 

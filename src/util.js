@@ -6,6 +6,7 @@ const {BrowserWindow} = require('electron/main')
 function closeAllWindows() {
     allWindow = BrowserWindow.getAllWindows()
     allWindow.forEach((win) => {
+        win.removeAllListeners('close') // 移除之前的监听器
         win.close()
     })
 }

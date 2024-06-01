@@ -2,17 +2,22 @@ const {ipcRenderer, contextBridge} = require('electron')
 
 //新建或关闭窗口
 contextBridge.exposeInMainWorld('WindowOption', {
-    CreateNotesWindow: () => {
-        ipcRenderer.invoke('create-notes-window')
+    CreateNotesWindow: async() => {
+        const id = await ipcRenderer.invoke('create-notes-window')
+        return id
     },
-    CreateModelWindow: () => {
-        ipcRenderer.invoke('create-model-window')
+    CreateModelWindow: async() => {
+        const id = await ipcRenderer.invoke('create-model-window')
+        return id
     },
-    GetWindowId:async() => {
+    GetWindowId: async() => {
         const id = await ipcRenderer.invoke('get-window-id')
         return id
     },
-    CloseWindow: (id) => {
-        ipcRenderer.invoke('close-window',id)
+    OpenWindow: (id) => {
+        ipcRenderer.invoke('open-window',id)
+    },
+    DeleteWindow: (id) => {
+        ipcRenderer.invoke('delete-window',id)
     }
 })

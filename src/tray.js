@@ -16,7 +16,6 @@ function createTray(mainWindow,icon,tip){
                     buttons: ['Yes', 'No']
                 }).then((res) => {
                     if (res.response === 0) {
-                        mainWindow.removeAllListeners('close'); // 移除之前的监听器
                         closeAllWindows()
                         app.quit()
                     }
