@@ -34,6 +34,7 @@ function createNotesWindow(loadFile,windowMap){
         width: 240,
         height: 180,
         show: false,
+        frame: false,
     })
     notes.loadFile(loadFile)
     notes.once('ready-to-show',()=>{

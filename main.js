@@ -1,7 +1,7 @@
 const {app,ipcMain} = require('electron/main')
-const {createMainWindow,createNotesWindow,createModelWindow,getWindowId} = require('./src/window.js')
-const {createMainMenu} = require('./src/menu')
-const {createTray} = require('./src/tray')
+const {createMainWindow,createNotesWindow,createModelWindow,getWindowId} = require('./controller/window')
+const {createMainMenu} = require('./controller/menu')
+const {createTray} = require('./controller/tray')
 const {MAIN_WINDOW_PARAM} = require('./config/param')
 
 const windowMap = new Map()
@@ -40,7 +40,7 @@ app.whenReady().then(() => {
     windowMap.set(mainWindowId, mainWindow)
 
     //创建托盘
-    let tray = createTray(mainWindow, './assets/icon.png', 'LinNotes')
+    let tray = createTray(mainWindow, './src/assets/icon.png', 'LinNotes')
 })
 
 app.on('window-all-closed', () => {
