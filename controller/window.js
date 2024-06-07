@@ -29,23 +29,27 @@ function createMainWindow({width, height, show, preload_dir, devTools, loadFile,
     return mainWindow
 }
 
-function createNotesWindow(loadFile,windowMap){
+function createNotesWindow(loadFile,windowMap,preload_dir){
     let notes = new BrowserWindow({
         width: 240,
         height: 180,
         show: false,
         frame: false,
+        webPreferences: {
+            preload: preload_dir + '/preload.js',
+        }
     })
-    notes.loadFile(loadFile)
+    //notes.loadFile(loadFile)
+    notes.loadURL(loadFile)
     notes.once('ready-to-show',()=>{
         notes.show()
     })
+    notes.webContents.openDevTools()
     notes.once('close',(event)=>{
         event.preventDefault()
         notes.hide()
     })
     notes.once('minimize',(event)=>{
-        event.preventDefault()
         notes.hide()
     })
     windowMap.set(notes.id, notes)

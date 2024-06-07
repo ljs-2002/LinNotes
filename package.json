@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/ljs-2002/LinNotes#readme",
   "dependencies": {
+    "vditor": "^3.10.4",
     "vue": "^3.4.21"
   },
   "devDependencies": {

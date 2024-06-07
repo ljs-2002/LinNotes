@@ -19,5 +19,11 @@ contextBridge.exposeInMainWorld('WindowOption', {
     },
     DeleteWindow: (id) => {
         ipcRenderer.invoke('delete-window',id)
+    },
+    ToggleAlwaysOnTop: (id) => {
+        ipcRenderer.invoke('always-top',id)
+    },
+    Minimize: (id) => {
+        ipcRenderer.invoke('minimize',id)
     }
 })

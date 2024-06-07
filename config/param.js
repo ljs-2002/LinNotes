@@ -20,6 +20,10 @@ const MAIN_WINDOW_PARAM = {
     ico: MAIN_WINDOW_ICON
 }
 
+//notes 窗口参数
+const NOTES_PRELOAD_DIR = rootPath
+
 module.exports = {
-    MAIN_WINDOW_PARAM
+    MAIN_WINDOW_PARAM,
+    NOTES_PRELOAD_DIR
 }

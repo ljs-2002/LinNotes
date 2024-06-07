@@ -2,7 +2,7 @@ const {app,ipcMain} = require('electron/main')
 const {createMainWindow,createNotesWindow,createModelWindow,getWindowId} = require('./controller/window')
 const {createMainMenu} = require('./controller/menu')
 const {createTray} = require('./controller/tray')
-const {MAIN_WINDOW_PARAM} = require('./config/param')
+const {MAIN_WINDOW_PARAM,NOTES_PRELOAD_DIR} = require('./config/param')
 
 const windowMap = new Map()
 let mainWindow = null
@@ -10,7 +10,7 @@ let mainWindowId = 0
 
 app.whenReady().then(() => {
     ipcMain.handle('create-notes-window', () => {
-        win = createNotesWindow('./renderer/Notes.html',windowMap)
+        win = createNotesWindow('http://localhost:4000/notes/',windowMap,NOTES_PRELOAD_DIR)
         windowMap.set(win.id, win)
         return win.id
     })
@@ -32,6 +32,14 @@ app.whenReady().then(() => {
         win.close()
         windowMap.delete(id)
         win=null
+    })
+    ipcMain.handle('always-top', (event,id) => {
+        let win = windowMap.get(id)
+        win.setAlwaysOnTop(!win.isAlwaysOnTop())
+    })
+    ipcMain.handle('minimize', (event,id) => {
+        let win = windowMap.get(id)
+        win.minimize()
     })
     //创建主页面
     mainWindow = createMainWindow(MAIN_WINDOW_PARAM)
