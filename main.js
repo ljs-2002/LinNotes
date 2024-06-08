@@ -1,8 +1,8 @@
 const {app,ipcMain} = require('electron/main')
-const {createMainWindow,createNotesWindow,createModelWindow,getWindowId} = require('./controller/window')
-const {createMainMenu} = require('./controller/menu')
-const {createTray} = require('./controller/tray')
-const {MAIN_WINDOW_PARAM,NOTES_PRELOAD_DIR} = require('./config/param')
+const {createMainWindow,createNotesWindow,createModelWindow,getWindowId} = require('./src/controller/window')
+const {createMainMenu} = require('./src/controller/menu')
+const {createTray} = require('./src/controller/tray')
+const {MAIN_WINDOW_PARAM,NOTES_PRELOAD_DIR} = require('./src/config/param')
 
 const windowMap = new Map()
 let mainWindow = null

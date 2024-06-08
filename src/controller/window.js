@@ -1,5 +1,5 @@
 const {BrowserWindow} = require('electron')
-
+const {resolve} = require('path')
 
 function createMainWindow({width, height, show, preload_dir, devTools, loadFile, ico}) {
     let mainWindow = new BrowserWindow({
@@ -8,7 +8,7 @@ function createMainWindow({width, height, show, preload_dir, devTools, loadFile,
         show: show,
         icon: ico,
         webPreferences: {
-            preload: preload_dir + '/preload.js',
+            preload: resolve(preload_dir, 'preload.js'),
         }
     })
     mainWindow.loadFile(loadFile)
@@ -36,7 +36,7 @@ function createNotesWindow(loadFile,windowMap,preload_dir){
         show: false,
         frame: false,
         webPreferences: {
-            preload: preload_dir + '/preload.js',
+            preload: resolve(preload_dir, 'preload.js')
         }
     })
     //notes.loadFile(loadFile)

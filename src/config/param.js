@@ -1,5 +1,5 @@
 const path = require('path');
-const rootPath = path.resolve(__dirname, '..');
+const rootPath = path.resolve(__dirname, '../..');
 
 // 主窗口参数
 const MAIN_WINDOW_WIDTH = 300
