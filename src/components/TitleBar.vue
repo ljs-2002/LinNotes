@@ -1,12 +1,12 @@
 <template>
   <div class="title-bar">
     <div class="title-bar__buttons">
-      <button @click="minimize"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+      <button @click="minimize"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"
           fill="rgba(0,0,0,1)">
           <path d="M5 11V13H19V11H5Z"></path>
         </svg></button>
-      <button @click="toggleAlwaysOnTop"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-          height="24" fill="rgba(0,0,0,1)">
+      <button @click="toggleAlwaysOnTop"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20"
+          height="20" fill="rgba(0,0,0,1)">
           <path
             d="M18 3V5H17V11L19 14V16H13V23H11V16H5V14L7 11V5H6V3H18ZM9 5V11.6056L7.4037 14H16.5963L15 11.6056V5H9Z">
           </path>
@@ -57,7 +57,7 @@ export default {
   -webkit-app-region: drag;
   background-color: #ffffff;
   color: white;
-  height: 30px;
+  height: 20px;
   padding: 0 10px;
 }
 

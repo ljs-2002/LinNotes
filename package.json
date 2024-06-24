@@ -22,8 +22,12 @@
   },
   "homepage": "https://github.com/ljs-2002/LinNotes#readme",
   "dependencies": {
+    "lodash": "^4.17.21",
+    "pinia": "^2.1.7",
+    "store2": "^2.14.3",
     "vditor": "^3.10.4",
-    "vue": "^3.4.21"
+    "vue": "^3.4.21",
+    "vue-router": "^4.4.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",

@@ -1,7 +1,7 @@
-const {BrowserWindow} = require('electron')
-const {resolve} = require('path')
+const { BrowserWindow } = require('electron')
+const { resolve } = require('path')
 
-function createMainWindow({width, height, show, preload_dir, devTools, loadFile, ico}) {
+function createMainWindow({ width, height, show, preload_dir, devTools, loadFile, ico }) {
     let mainWindow = new BrowserWindow({
         width: width,
         height: height,
@@ -12,7 +12,7 @@ function createMainWindow({width, height, show, preload_dir, devTools, loadFile,
         }
     })
     mainWindow.loadFile(loadFile)
-    if (devTools){
+    if (devTools) {
         mainWindow.webContents.openDevTools()
     }
     mainWindow.on('minimize', (event) => {
@@ -23,13 +23,13 @@ function createMainWindow({width, height, show, preload_dir, devTools, loadFile,
         event.preventDefault()
         mainWindow.hide()
     })
-    mainWindow.once('ready-to-show',()=>{
+    mainWindow.once('ready-to-show', () => {
         mainWindow.show()
     })
     return mainWindow
 }
 
-function createNotesWindow(loadFile,windowMap,preload_dir){
+function createNotesWindow(loadFile, windowMap, preload_dir) {
     let notes = new BrowserWindow({
         width: 240,
         height: 180,
@@ -39,24 +39,24 @@ function createNotesWindow(loadFile,windowMap,preload_dir){
             preload: resolve(preload_dir, 'preload.js')
         }
     })
-    //notes.loadFile(loadFile)
+    // notes.loadFile(loadFile)
     notes.loadURL(loadFile)
-    notes.once('ready-to-show',()=>{
+    notes.once('ready-to-show', () => {
         notes.show()
     })
     notes.webContents.openDevTools()
-    notes.once('close',(event)=>{
+    notes.once('close', (event) => {
         event.preventDefault()
         notes.hide()
     })
-    notes.once('minimize',(event)=>{
+    notes.once('minimize', (event) => {
         notes.hide()
     })
     windowMap.set(notes.id, notes)
     return notes
 }
 
-function createModelWindow(loadFile,parent,windowMap){
+function createModelWindow(loadFile, parent, windowMap) {
     let model = new BrowserWindow({
         width: 400,
         height: 300,
@@ -65,10 +65,10 @@ function createModelWindow(loadFile,parent,windowMap){
         modal: true,
     })
     model.loadFile(loadFile)
-    model.once('ready-to-show',()=>{
+    model.once('ready-to-show', () => {
         model.show()
     })
-    model.once('closed',()=>{
+    model.once('closed', () => {
         windowMap.delete(model.id)
         console.log(`delete model with id ${model.id}`)
         console.log(windowMap)
@@ -80,7 +80,7 @@ function createModelWindow(loadFile,parent,windowMap){
     return model
 }
 
-function getWindowId(){
+function getWindowId() {
     return BrowserWindow.getFocusedWindow().id
 }
 
