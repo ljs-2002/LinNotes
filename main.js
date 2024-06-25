@@ -9,19 +9,22 @@ let mainWindow = null
 let mainWindowId = 0
 
 app.whenReady().then(() => {
-    ipcMain.handle('create-notes-window', () => {
+    ipcMain.handle('create-notes-window', (event,create_time) => {
         // win = createNotesWindow(`http://localhost:4000/test${windowMap.size}/`, windowMap, NOTES_PRELOAD_DIR)
-        win = createNotesWindow(`http://localhost:4000/notes${windowMap.size}/`, windowMap, NOTES_PRELOAD_DIR)
+        let win = createNotesWindow(`http://localhost:4000/notes/${create_time}/`, windowMap, NOTES_PRELOAD_DIR)
         // win = createNotesWindow('./dist/notes/index.html',windowMap,NOTES_PRELOAD_DIR)
         windowMap.set(win.id, win)
         return win.id
     })
+    ipcMain.handle('save-notes', (event, key, title, content) => {
+        mainWindow.webContents.send('save-notes', key, title, content)
+    })
     ipcMain.handle('create-model-window', () => {
-        win = createModelWindow('./renderer/settings.html', mainWindow, windowMap)
+        let win = createModelWindow('./renderer/settings.html', mainWindow, windowMap)
         windowMap.set(win.id, win)
         return win.id
     })
-    ipcMain.handle('get-window-id', (event) => {
+    ipcMain.handle('get-window-id', () => {
         return getWindowId()
     })
     ipcMain.handle('open-window', (event, id) => {

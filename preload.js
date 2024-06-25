@@ -2,8 +2,8 @@ const { ipcRenderer, contextBridge } = require('electron')
 
 //新建或关闭窗口
 contextBridge.exposeInMainWorld('WindowOption', {
-    CreateNotesWindow: async () => {
-        const id = await ipcRenderer.invoke('create-notes-window')
+    CreateNotesWindow: async (create_time) => {
+        const id = await ipcRenderer.invoke('create-notes-window',create_time)
         return id
     },
     CreateModelWindow: async () => {
@@ -27,3 +27,28 @@ contextBridge.exposeInMainWorld('WindowOption', {
         ipcRenderer.invoke('minimize', id)
     }
 })
+
+contextBridge.exposeInMainWorld('NoteOption', {
+    GetNotes: async (key) => {
+        //Note请求主进程
+        const id = await ipcRenderer.invoke('get-window-id')
+        const content = await ipcRenderer.invoke('get-notes', key, id)
+        return content
+    },
+    SendNotes: async (key) => {
+        //Home送回主进程
+        const content = await ipcRenderer.invoke('send-notes', key)
+        return content
+    },
+    SaveNotes: (key, title, content) => {
+        //Note通知主进程保存
+        ipcRenderer.invoke('save-notes', key, title, content)
+    }
+})
+
+contextBridge.exposeInMainWorld('electron', {
+    ipcRenderer: {
+        send: (channel, data) => ipcRenderer.send(channel, data),
+        on: (channel, func) => ipcRenderer.on(channel, func)
+    }
+});

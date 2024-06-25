@@ -1,21 +1,24 @@
-import { createRouter, createWebHistory } from 'vue-router'
-
+import { createRouter, createWebHistory} from 'vue-router'
+import Notes from '@/pages/Notes.vue'
+import Home from '@/pages/Home.vue'
+import test from '@/pages/test.vue'
 const routes = [
     {
         path: '/',
         component: () => import('@/pages/helloworld.vue')
     },
-    // {
-    //     path: '/home',
-    //     component: () => import('@/pages/home.vue')
-    // },
     {
-        path: '/notes:id',
-        component: () => import('@/pages/notes.vue')
+        path: '/home',
+        component: Home
     },
     {
-        path: '/test:id',
-        component: () => import('@/pages/test.vue')
+        path: '/notes/:id',
+        name: 'Notes',
+        component: Notes
+    },
+    {
+        path: '/test/:id',
+        component: test
     }
 ]
 

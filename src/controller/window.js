@@ -11,7 +11,8 @@ function createMainWindow({ width, height, show, preload_dir, devTools, loadFile
             preload: resolve(preload_dir, 'preload.js'),
         }
     })
-    mainWindow.loadFile(loadFile)
+    // mainWindow.loadFile(loadFile)
+    mainWindow.loadURL(loadFile)
     if (devTools) {
         mainWindow.webContents.openDevTools()
     }
@@ -49,7 +50,7 @@ function createNotesWindow(loadFile, windowMap, preload_dir) {
         event.preventDefault()
         notes.hide()
     })
-    notes.once('minimize', (event) => {
+    notes.once('minimize', () => {
         notes.hide()
     })
     windowMap.set(notes.id, notes)

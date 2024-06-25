@@ -17,11 +17,11 @@ export default defineConfig({
     https: false,
     hmr: true,
   },
-  build:{
-    rollupOptions:{
-      input:{
-        main:resolve(__dirname, 'index.html'),
-        notes:resolve(__dirname, 'notes/index.html')
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        notes: resolve(__dirname, 'notes/index.html')
       }
     }
   }

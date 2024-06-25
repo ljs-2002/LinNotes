@@ -7,7 +7,8 @@ const MAIN_WINDOW_HEIGHT = 500
 const MAIN_WINDOW_SHOW = false
 const MAIN_WINDOW_DIR = rootPath
 const MAIN_WINDOW_DEVTOOLS = true
-const MAIN_WINDOW_LOAD_FILE = rootPath + '/renderer/mainPage.html'
+// const MAIN_WINDOW_LOAD_FILE = rootPath + '/renderer/mainPage.html'
+const MAIN_WINDOW_LOAD_FILE = 'http://localhost:4000/home/'
 const MAIN_WINDOW_ICON = rootPath + '/assets/icon.png'
 
 const MAIN_WINDOW_PARAM = {

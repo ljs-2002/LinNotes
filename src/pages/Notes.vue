@@ -20,21 +20,22 @@
 <script setup>
 import Vditor from 'vditor'
 import 'vditor/dist/index.css'
-import { ref, onMounted } from 'vue'
+import {ref, onMounted} from 'vue'
+import { useRoute } from 'vue-router'
 import _ from 'lodash'
-import useNoteStore from '@/storage/noteStore'
 import TitleBar from '@/components/TitleBar.vue'
 const vditor = ref()
 const titleDiv = ref(null)
-const createdTime = ref(new Date().toLocaleString())
+const route = useRoute()
+const noteID = Number(route.params.id)
+const createdTime = ref(new Date(noteID).toLocaleString())
 let title = ref(createdTime.value)
-const noteStore = useNoteStore()
-const noteID = Date.now()
+
 let isComposing = ref(false)
 
 function updateNoteStore() {
   const content = vditor.value ? vditor.value.getValue() : '';
-  noteStore.update(`note_${noteID}`, title.value, content);
+  window.NoteOption.SaveNotes(noteID, title.value, content);
 }
 
 const handleCompositionStart = () => {

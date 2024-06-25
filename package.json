@@ -9,7 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "start": "electron .",
-    "electron": "nodemon --watch ./ --ext .js,.html,.css --exec yarn start"
+    "electron": "nodemon --watch ./ --ext .js,.html,.css,.vue --exec yarn start"
   },
   "repository": {
     "type": "git",
