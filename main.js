@@ -16,8 +16,8 @@ app.whenReady().then(() => {
         windowMap.set(win.id, win)
         return win.id
     })
-    ipcMain.handle('save-notes', (event, key, title, content) => {
-        mainWindow.webContents.send('save-notes', key, title, content)
+    ipcMain.handle('save-notes', (event, key, title, create_time, content) => {
+        mainWindow.webContents.send('save-notes', key, title, create_time, content)
     })
     ipcMain.handle('create-model-window', () => {
         let win = createModelWindow('./renderer/settings.html', mainWindow, windowMap)

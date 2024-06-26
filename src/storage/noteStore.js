@@ -1,33 +1,40 @@
 import { defineStore } from 'pinia'
 import store from 'store2'
+import _ from "lodash";
 
 const useNoteStore = defineStore('noteStore', {
     state() {
         return {
             notes: new Map(),
-            // notes: globalNotes,
+            notes_list: [],//存储所有的notes的Title和CreateTime
             store_key: 'noteStoreLocal'
         }
     },
 
     actions: {
-        add(key, title, content) {
+        add(key, title, create_time, content) {
             let note = {
                 'title': title,
+                'create_time': create_time,
                 'content': content,
-                'id': key
+                'id': key,
             }
             this.notes.set(key, note)
+            //更新notes_list
+            this.notes_list.push({ 'noteTitle': title, 'createTime': create_time , 'id': key})
             store.set(this.store_key, this.transformJson())
             // console.log(key,note)
         },
-        update(key, title, content) {
+        update(key, title, create_time, content) {
             let note = {
                 'title': title,
+                'create_time': create_time,
                 'content': content,
-                'id': key
+                'id': key,
             }
             this.notes.set(key, note)
+            //更新notes_list
+            _.find(this.notes_list, function (o) { return o.id === key }).title = title
             console.log(this.notes)
             store.set(this.store_key, this.transformJson())
             // console.log(key, note)
@@ -58,6 +65,12 @@ const useNoteStore = defineStore('noteStore', {
         },
         transformJson() {
             return JSON.stringify(Array.from(this.notes.entries()))
+        },
+        updateList(){
+            this.notes_list = []
+            for (let [key, value] of this.notes) {
+                this.notes_list.push({ 'title': value.title, 'create_time': value.create_time })
+            }
         }
     }
 })

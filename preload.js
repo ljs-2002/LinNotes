@@ -40,9 +40,9 @@ contextBridge.exposeInMainWorld('NoteOption', {
         const content = await ipcRenderer.invoke('send-notes', key)
         return content
     },
-    SaveNotes: (key, title, content) => {
+    SaveNotes: (key, title, create_time, content) => {
         //Note通知主进程保存
-        ipcRenderer.invoke('save-notes', key, title, content)
+        ipcRenderer.invoke('save-notes', key, title, create_time, content)
     }
 })
 

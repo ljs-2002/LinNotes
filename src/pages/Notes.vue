@@ -35,7 +35,7 @@ let isComposing = ref(false)
 
 function updateNoteStore() {
   const content = vditor.value ? vditor.value.getValue() : '';
-  window.NoteOption.SaveNotes(noteID, title.value, content);
+  window.NoteOption.SaveNotes(noteID, title.value, createdTime.value, content);
 }
 
 const handleCompositionStart = () => {
