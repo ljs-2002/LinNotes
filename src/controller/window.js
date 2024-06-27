@@ -30,7 +30,7 @@ function createMainWindow({ width, height, show, preload_dir, devTools, loadFile
     return mainWindow
 }
 
-function createNotesWindow(loadFile, windowMap, preload_dir) {
+function createNotesWindow(loadFile, windowMap, preload_dir, handleClose) {
     let notes = new BrowserWindow({
         width: 240,
         height: 180,
@@ -48,12 +48,15 @@ function createNotesWindow(loadFile, windowMap, preload_dir) {
     notes.webContents.openDevTools()
     notes.once('close', (event) => {
         event.preventDefault()
-        notes.hide()
+        notes.close()
+        handleClose(notes.webContents.id)
     })
-    notes.once('minimize', () => {
-        notes.hide()
+    notes.once('minimize', (event) => {
+        event.preventDefault()
+        notes.close()
+        handleClose(notes.webContents.id)
     })
-    windowMap.set(notes.id, notes)
+    windowMap.set(notes.webContents.id, notes)
     return notes
 }
 
@@ -82,7 +85,7 @@ function createModelWindow(loadFile, parent, windowMap) {
 }
 
 function getWindowId() {
-    return BrowserWindow.getFocusedWindow().id
+    return BrowserWindow.getFocusedWindow().webContents.id
 }
 
 module.exports = {

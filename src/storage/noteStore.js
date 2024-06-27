@@ -34,44 +34,52 @@ const useNoteStore = defineStore('noteStore', {
             }
             this.notes.set(key, note)
             //更新notes_list
-            _.find(this.notes_list, function (o) { return o.id === key }).title = title
-            console.log(this.notes)
+            _.find(this.notes_list, function (o) { return o.id === key }).noteTitle = title
             store.set(this.store_key, this.transformJson())
             // console.log(key, note)
         },
         delete(key) {
             this.notes.delete(key)
+            //更新notes_list
+            _.remove(this.notes_list, function (o) { return o.id === key })
             store.set(this.store_key, this.transformJson())
         },
         deleteAll() {
             this.notes.clear()
+            this.notes_list = []
             store.set(this.store_key, "[]")
         },
         load() {
-            let notes = store.get(this.store_key) || "[]"
-            //json字符串转map
-            let arr = JSON.parse(notes);
-            console.log(arr)
-            for (let i = 0; i < arr.length; i++) {
-                this.notes.set(arr[i][0], arr[i][1], arr[i][2])
+            let to_load = store.get(this.store_key)
+            if (to_load === undefined || to_load === "[]" || to_load ===[]) {
+                to_load = '{"notes":[],"notes_list":[]}'
             }
+            let {notes, notes_list} = JSON.parse(to_load)
+            // //json字符串转map
+            // let arr = JSON.parse(notes);
+            for (let i = 0; i < notes.length; i++) {
+                this.notes.set(notes[i][0], notes[i][1], notes[i][2])
+            }
+            this.notes_list = notes_list
         },
         getNotes(key) {
-            return this.notes.get(key)
+            if (this.notes.has(key)) {
+                return this.notes.get(key)
+            } else {
+                return null
+            }
         },
         getAllNotes() {
             //以key:value的形式返回所有的notes
             return Array.from(this.notes.entries())
         },
         transformJson() {
-            return JSON.stringify(Array.from(this.notes.entries()))
-        },
-        updateList(){
-            this.notes_list = []
-            for (let [key, value] of this.notes) {
-                this.notes_list.push({ 'title': value.title, 'create_time': value.create_time })
+            const to_store = {
+                'notes': Array.from(this.notes.entries()),
+                'notes_list': this.notes_list
             }
-        }
+            return JSON.stringify(to_store)
+        },
     }
 })
 

@@ -33,6 +33,10 @@ let title = ref(createdTime.value)
 
 let isComposing = ref(false)
 
+if (titleDiv.value) {
+  titleDiv.value.innerText = title.value;
+}
+
 function updateNoteStore() {
   const content = vditor.value ? vditor.value.getValue() : '';
   window.NoteOption.SaveNotes(noteID, title.value, createdTime.value, content);
@@ -56,12 +60,30 @@ const handleInput = _.debounce(() => {
   }
 }, 500)
 onMounted(() => {
+  let note_content = ''
+  window.NoteOption.RequireNoteContent(noteID)
+  window.NoteOption.HandleNotesContent((note) => {
+    note = JSON.parse(note)
+    if (note !== null) {
+      // 设置标题
+      title.value = note.title
+      if (titleDiv.value) {
+        titleDiv.value.innerText = note.title
+      }
+      // 设置内容
+      // vditor.value.setValue(note.content)
+      note_content = note.content
+    }
+  })
   vditor.value = new Vditor('vditor-area', {
     height: '100%',
     toolbar: [],
     // blur: () => {
     //   updateNoteStore();
     // }
+    after() {
+      vditor.value.setValue(note_content,true)
+    },
     input: (value) => {
       if (value) {
         updateNoteStore();
@@ -71,15 +93,7 @@ onMounted(() => {
       "id": `vditor-${noteID.toString()}`
     },
   })
-  if (titleDiv.value) {
-    titleDiv.value.innerText = title.value;
-  }
-  // // 监听输入事件，更新标题变量
-  // titleDiv.value.addEventListener('input', () => {
-  //   title.value = titleDiv.value.innerText;
-  // });
 })
-// noteStore.add(timestamp.value,'aaa')
 
 </script>
 <style scoped>
