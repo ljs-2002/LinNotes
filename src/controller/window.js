@@ -1,14 +1,15 @@
-const { BrowserWindow } = require('electron')
-const { resolve } = require('path')
+import { BrowserWindow } from 'electron'
+import { resolve } from 'path'
 
-function createMainWindow({ width, height, show, preload_dir, devTools, loadFile, ico }) {
+export function createMainWindow({ width, height, show, preload_dir, devTools, loadFile, ico }) {
     let mainWindow = new BrowserWindow({
         width: width,
         height: height,
         show: show,
         icon: ico,
         webPreferences: {
-            preload: resolve(preload_dir, 'preload.js'),
+            sandbox: false,
+            preload: resolve(preload_dir, 'preload.mjs'),
         }
     })
     // mainWindow.loadFile(loadFile)
@@ -30,14 +31,15 @@ function createMainWindow({ width, height, show, preload_dir, devTools, loadFile
     return mainWindow
 }
 
-function createNotesWindow(loadFile, windowMap, preload_dir, handleClose) {
+export function createNotesWindow(loadFile, windowMap, preload_dir, handleClose) {
     let notes = new BrowserWindow({
         width: 240,
         height: 180,
         show: false,
         frame: false,
         webPreferences: {
-            preload: resolve(preload_dir, 'preload.js')
+            sandbox: false,
+            preload: resolve(preload_dir, 'preload.mjs')
         }
     })
     // notes.loadFile(loadFile)
@@ -60,7 +62,7 @@ function createNotesWindow(loadFile, windowMap, preload_dir, handleClose) {
     return notes
 }
 
-function createModelWindow(loadFile, parent, windowMap) {
+export function createModelWindow(loadFile, parent, windowMap) {
     let model = new BrowserWindow({
         width: 400,
         height: 300,
@@ -84,13 +86,6 @@ function createModelWindow(loadFile, parent, windowMap) {
     return model
 }
 
-function getWindowId() {
+export function getWindowId() {
     return BrowserWindow.getFocusedWindow().webContents.id
-}
-
-module.exports = {
-    createMainWindow,
-    createNotesWindow,
-    createModelWindow,
-    getWindowId
 }

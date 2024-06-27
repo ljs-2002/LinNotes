@@ -1,10 +1,10 @@
-const {Menu,ipcRenderer} = require('electron')
-const {createNotesWindow,createModelWindow} = require('./window.js')
+import { Menu } from 'electron'
+import { createNotesWindow, createModelWindow } from './window.js'
 
 const notes_path = './renderer/Notes.html'
 const settings_path = './renderer/settings.html'
 
-function createMainMenu(mainWindow,windowMap){
+export function createMainMenu(mainWindow,windowMap){
     const mainMenuTamplate = [
         {
             label: 'Notes',
@@ -31,11 +31,5 @@ function createMainMenu(mainWindow,windowMap){
             ]
         }
     ]
-    const mainMenu = Menu.buildFromTemplate(mainMenuTamplate)
-    return mainMenu
-}
-
-
-module.exports = {
-    createMainMenu
+    return Menu.buildFromTemplate(mainMenuTamplate)
 }

@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.9.0",
   "description": "desk notes software",
+  "type": "module",
   "main": "main.js",
   "scripts": {
     "dev": "vite",

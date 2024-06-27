@@ -1,5 +1,4 @@
-const { ipcRenderer, contextBridge } = require('electron')
-
+import { ipcRenderer, contextBridge } from 'electron'
 //新建或关闭窗口
 contextBridge.exposeInMainWorld('WindowOption', {
     CreateNotesWindow: async (note_id) => {

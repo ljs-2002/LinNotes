@@ -1,8 +1,8 @@
-const { app, ipcMain } = require('electron/main')
-const { createMainWindow, createNotesWindow, createModelWindow, getWindowId } = require('./src/controller/window')
-const { createMainMenu } = require('./src/controller/menu')
-const { createTray } = require('./src/controller/tray')
-const { MAIN_WINDOW_PARAM, NOTES_PRELOAD_DIR } = require('./src/config/param')
+import { app, ipcMain } from 'electron'
+import { createMainWindow, createNotesWindow, createModelWindow, getWindowId } from './src/controller/window.js'
+import { createMainMenu } from './src/controller/menu.js'
+import { createTray } from './src/controller/tray.js'
+import { MAIN_WINDOW_PARAM, NOTES_PRELOAD_DIR } from './src/config/param.js'
 
 const windowMap = new Map()
 const notesMap = new Map()
@@ -10,6 +10,7 @@ let mainWindow = null
 let mainWindowId = 0
 
 app.whenReady().then(() => {
+    console.log(NOTES_PRELOAD_DIR)
     ipcMain.handle('create-notes-window', (event,create_time) => {
         if (notesMap.has(create_time) && windowMap.has(notesMap.get(create_time))){
             return null

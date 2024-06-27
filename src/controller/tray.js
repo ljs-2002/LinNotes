@@ -1,10 +1,9 @@
-const {Tray,Menu,dialog,app} = require('electron/main')
-const {closeAllWindows} = require('./util')
-
+import { Tray, Menu, dialog, app } from 'electron'
+import { closeAllWindows } from './util.js'
 /*
 * 创建托盘
 */
-function createTray(mainWindow,icon,tip){
+export function createTray(mainWindow,icon,tip){
     let trayMenu = Menu.buildFromTemplate([
         {
             label: 'Quit',
@@ -42,8 +41,4 @@ function createTray(mainWindow,icon,tip){
       });
     
     return tray
-}
-
-module.exports = {
-    createTray
 }
