@@ -1,5 +1,6 @@
 <script setup>
-defineProps(['noteTitle','createTime'])
+defineProps(['noteTitle','createTime','noteID','handleOpenNote','handleDeleteNote'])
+
 </script>
 
 <template>
@@ -9,8 +10,8 @@ defineProps(['noteTitle','createTime'])
     <div class="note-created-time">{{createTime}}</div>
   </div>
   <div class="note-operation">
-    <button>delete</button>
-    <button>open</button>
+    <button @click = "handleDeleteNote(noteID)">delete</button>
+    <button @click="handleOpenNote(noteID)">open</button>
   </div>
 </div>
 </template>

@@ -2,8 +2,8 @@ const { ipcRenderer, contextBridge } = require('electron')
 
 //新建或关闭窗口
 contextBridge.exposeInMainWorld('WindowOption', {
-    CreateNotesWindow: async (create_time) => {
-        const id = await ipcRenderer.invoke('create-notes-window',create_time)
+    CreateNotesWindow: async (note_id) => {
+        const id = await ipcRenderer.invoke('create-notes-window',note_id)
         return id
     },
     CreateModelWindow: async () => {
@@ -17,8 +17,8 @@ contextBridge.exposeInMainWorld('WindowOption', {
     OpenWindow: (id) => {
         ipcRenderer.invoke('open-window', id)
     },
-    DeleteWindow: (id) => {
-        ipcRenderer.invoke('delete-window', id)
+    DeleteWindow: (note_id) => {
+        ipcRenderer.invoke('delete-window', note_id)
     },
     ToggleAlwaysOnTop: (id) => {
         ipcRenderer.invoke('always-top', id)
@@ -29,20 +29,30 @@ contextBridge.exposeInMainWorld('WindowOption', {
 })
 
 contextBridge.exposeInMainWorld('NoteOption', {
-    GetNotes: async (key) => {
-        //Note请求主进程
-        const id = await ipcRenderer.invoke('get-window-id')
-        const content = await ipcRenderer.invoke('get-notes', key, id)
-        return content
-    },
-    SendNotes: async (key) => {
-        //Home送回主进程
-        const content = await ipcRenderer.invoke('send-notes', key)
-        return content
-    },
     SaveNotes: (key, title, create_time, content) => {
         //Note通知主进程保存
         ipcRenderer.invoke('save-notes', key, title, create_time, content)
+    },
+    HandleSaveNote: (func)=>{
+        ipcRenderer.on('save-notes', (event, key, title, create_time, content) => {
+            func(key, title, create_time, content)
+        })
+    },
+    RequireNoteContent: (note_id) => {
+        ipcRenderer.invoke('require-note-content', note_id)
+    },
+    HandleRequireNoteContent: (func) => {
+        ipcRenderer.on('require-note-content', (event, note_id, senderID) => {
+            func(note_id, senderID)
+        })
+    },
+    ReplyNotesContent: (note_window_id,content) => {
+        ipcRenderer.invoke('reply-notes-content', note_window_id,content)
+    },
+    HandleNotesContent: (func) => {
+        ipcRenderer.on('reply-notes-content', (event, note) => {
+            func(note)
+        })
     }
 })
 

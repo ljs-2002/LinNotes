@@ -6,28 +6,30 @@ import {VueDraggable} from "vue-draggable-plus";
 
 const noteStore = useNoteStore()
 
-window.electron.ipcRenderer.on('save-notes', (event, id, title,create_time,content) => {
-  noteStore.update(id, title, create_time, content)
+window.NoteOption.HandleSaveNote(noteStore.update)
+window.NoteOption.HandleRequireNoteContent((noteID,senderID)=>{
+  let note = noteStore.getNotes(noteID)
+  window.NoteOption.ReplyNotesContent(senderID,JSON.stringify(note))
 })
-
-function handleCreateNote(){
+const handleCreateNote = () => {
   const noteID = Date.now()
   const createTime = new Date(noteID).toLocaleString()
-  window.WindowOption.CreateNotesWindow(noteID)
-  noteStore.add(noteID,createTime,createTime,'')
+  window.WindowOption.CreateNotesWindow(noteID).then(()=>{
+    noteStore.add(noteID,createTime,createTime,'')
+  })
 }
 
-// function handleOpenNote(id){
-//   window.WindowOption.openNotesWindow(id)
-// }
+const handleOpenNote = (noteID)=>{
+  window.WindowOption.CreateNotesWindow(noteID)
+}
 
-function handleDeleteNote(id){
-  noteStore.delete(id)
+const handleDeleteNote = (noteID) => {
+  window.WindowOption.DeleteWindow(noteID)
+  noteStore.delete(noteID)
 }
 
 onMounted(() => {
   noteStore.load()
-  console.log(noteStore.notes)
 })
 
 </script>
@@ -44,6 +46,9 @@ onMounted(() => {
           :key="note.createTime"
           :noteTitle="note.noteTitle"
           :createTime="note.createTime"
+          :noteID="note.id"
+          :handleOpenNote="handleOpenNote"
+          :handleDeleteNote="handleDeleteNote"
       />
     </div>
   </VueDraggable>
