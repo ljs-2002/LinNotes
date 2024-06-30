@@ -24,7 +24,7 @@ contextBridge.exposeInMainWorld('WindowOption', {
     },
     Minimize: (id) => {
         ipcRenderer.invoke('minimize', id)
-    }
+    },
 })
 
 contextBridge.exposeInMainWorld('NoteOption', {

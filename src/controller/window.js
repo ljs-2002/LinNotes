@@ -15,7 +15,7 @@ export function createMainWindow({ width, height, show, preload_dir, devTools, l
     // mainWindow.loadFile(loadFile)
     mainWindow.loadURL(loadFile)
     if (devTools) {
-        mainWindow.webContents.openDevTools()
+        // mainWindow.webContents.openDevTools()
     }
     mainWindow.on('minimize', (event) => {
         event.preventDefault()
@@ -33,8 +33,8 @@ export function createMainWindow({ width, height, show, preload_dir, devTools, l
 
 export function createNotesWindow(loadFile, windowMap, preload_dir, handleClose) {
     let notes = new BrowserWindow({
-        width: 240,
-        height: 180,
+        width: 320,
+        height: 240,
         show: false,
         frame: false,
         webPreferences: {
@@ -47,7 +47,7 @@ export function createNotesWindow(loadFile, windowMap, preload_dir, handleClose)
     notes.once('ready-to-show', () => {
         notes.show()
     })
-    notes.webContents.openDevTools()
+    // notes.webContents.openDevTools()
     notes.once('close', (event) => {
         event.preventDefault()
         notes.close()

@@ -1,16 +1,24 @@
 <template>
   <div class="title-bar">
     <div class="title-bar__buttons">
-      <button @click="minimize"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"
-          fill="rgba(0,0,0,1)">
+      <button @click="minimize">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+             fill="rgba(0,0,0,1)">
           <path d="M5 11V13H19V11H5Z"></path>
-        </svg></button>
-      <button @click="toggleAlwaysOnTop"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20"
-          height="20" fill="rgba(0,0,0,1)">
+        </svg>
+      </button>
+      <button @click="toggleAlwaysOnTop">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18"
+             height="18" :fill="isRotated ? 'rgba(53,116,240,1)' : 'rgba(0,0,0,1)'"
+             :class="{ 'rotate-svg': !isRotated }">
           <path
-            d="M18 3V5H17V11L19 14V16H13V23H11V16H5V14L7 11V5H6V3H18ZM9 5V11.6056L7.4037 14H16.5963L15 11.6056V5H9Z">
+              d="M18 3V5H17V11L19 14V16H13V23H11V16H5V14L7 11V5H6V3H18ZM9 5V11.6056L7.4037 14H16.5963L15 11.6056V5H9Z">
           </path>
-        </svg></button>
+        </svg>
+      </button>
+    </div>
+    <div class="title-bar__content">
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -20,6 +28,7 @@ export default {
   data() {
     return {
       windowId: null, // 在data中添加一个用于存储窗口ID的属性
+      isRotated: false,
     };
   },
   methods: {
@@ -42,6 +51,7 @@ export default {
     toggleAlwaysOnTop() {
       this.getWindowId().then((id) => {
         window.WindowOption.ToggleAlwaysOnTop(id);
+        this.isRotated = !this.isRotated;
       });
     }
   }
@@ -52,17 +62,30 @@ export default {
 <style scoped>
 .title-bar {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  /*justify-content: flex-start;*/
   align-items: center;
   -webkit-app-region: drag;
-  background-color: #ffffff;
+  position: relative;
+  /*background-color: #ffffff;*/
   color: white;
-  height: 20px;
-  padding: 0 10px;
+  border: none !important;
+  padding: 5px 0;
+}
+
+.title-bar__content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
 }
 
 .title-bar__buttons {
   display: flex;
+  position: absolute;
+  left: 0;
+  /*margin-top: 5px;*/
+  /*margin-left: 0;*/
 }
 
 button {
@@ -70,11 +93,17 @@ button {
   background: none;
   border: none;
   color: white;
-  padding: 0 10px;
+  padding: 2px 5px;
   cursor: pointer;
+  outline: none;
 }
 
 button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  /*background-color: rgba(255, 255, 255, 0.2);*/
+  background-color: darkgray;
+}
+
+.rotate-svg {
+  transform: rotate(45deg);
 }
 </style>

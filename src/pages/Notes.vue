@@ -9,10 +9,13 @@
 -->
 <template>
   <main class="note-container">
-    <TitleBar />
-    <div contenteditable="true" class="note-title" ref="titleDiv" @compositionstart="handleCompositionStart"
-      @compositionend="handleCompositionEnd" @input="handleInput"></div>
-    <div class="note-created-time">{{ createdTime }}</div>
+    <div class="sticky-top">
+      <TitleBar>
+      <div contenteditable="true" class="note-title" ref="titleDiv" @compositionstart="handleCompositionStart"
+        @compositionend="handleCompositionEnd" @input="handleInput"></div>
+      </TitleBar>
+<!--      <div class="note-created-time">{{ createdTime }}</div>-->
+    </div>
     <div id='vditor-area' class="vditor-container"></div>
   </main>
 </template>
@@ -20,10 +23,12 @@
 <script setup>
 import Vditor from 'vditor'
 import 'vditor/dist/index.css'
-import {ref, onMounted} from 'vue'
+import '@/style/Scrollbar.css'
+import {ref, onMounted, onBeforeUnmount} from 'vue'
 import { useRoute } from 'vue-router'
 import _ from 'lodash'
 import TitleBar from '@/components/TitleBar.vue'
+
 const vditor = ref()
 const titleDiv = ref(null)
 const route = useRoute()
@@ -96,30 +101,49 @@ onMounted(() => {
 })
 
 </script>
-<style scoped>
+<style scoped lang="scss">
+$color: #f0f0f0;
 .note-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  max-height: 100vh;
   margin: 0;
 }
 
+.sticky-top {
+  position: sticky;
+  top: 0;
+  /* 背景颜色为主题色加深一点*/
+  background-color: darken($color, 0%);
+  z-index: 1; /* 确保置顶内容总是在其他内容之上 */
+}
+
 .vditor-container {
-  flex-grow: 1;
-  /* 这使得该div填满剩余空间 */
   overflow-y: auto;
-  /* 添加滚动条以防内容溢出 */
+  /* 这使得该div填满剩余空间 */
+  flex-grow: 1;
+}
+
+.vditor {
+  border: none !important;
+  --border-color: transparent !important;
 }
 
 .note-title {
   font-weight: bold;
-  font-size: 24px;
-  margin-bottom: 10px;
+  font-size: 16px;
+  margin: 0 auto;
+  outline: none;
+  color: black;
+  padding: 0 5px 0 0;
+  -webkit-app-region: no-drag;
 }
 
 .note-created-time {
   color: grey;
   font-size: 14px;
-  margin-bottom: 20px;
+  margin-left: 10px;
+  margin-bottom: 5px;
 }
 </style>

@@ -1,0 +1,16 @@
+::-webkit-scrollbar {
+    width: 10px; /* 默认宽度 */
+    height: 4px; /* 默认高度 */
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* 滚动条轨道的背景颜色 */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888; /* 滚动条滑块的背景颜色 */
+    border-radius: 4px; /* 滚动条滑块的圆角 */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* 滑块在悬停时的背景颜色 */
+}

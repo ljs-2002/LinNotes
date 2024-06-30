@@ -24,6 +24,7 @@
   "homepage": "https://github.com/ljs-2002/LinNotes#readme",
   "dependencies": {
     "lodash": "^4.17.21",
+    "normalize.css": "^8.0.1",
     "pinia": "^2.1.7",
     "store2": "^2.14.3",
     "vditor": "^3.10.4",
@@ -34,6 +35,8 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
     "electron": "^30.0.9",
+    "sass": "^1.77.6",
+    "sass-loader": "^14.2.1",
     "vite": "^5.2.0"
   }
 }
