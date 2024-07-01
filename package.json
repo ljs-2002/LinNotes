@@ -1,16 +1,17 @@
 {
   "name": "linnotes",
   "private": true,
-  "version": "0.9.0",
+  "version": "1.0.0",
   "description": "desk notes software",
   "type": "module",
   "main": "main.js",
   "scripts": {
-    "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "start": "electron .",
-    "electron": "nodemon --watch ./ --ext .js,.html,.css,.vue --exec yarn start"
+    "electron": "wait-on tcp:4000 && nodemon --watch ./ --ext .js,.html,.css,.vue --exec yarn start",
+    "dev": "cross-env NODE_ENV=development concurrently -k \"npx vite --port=4000\" \"yarn electron\"",
+    "make": "electron-builder"
   },
   "repository": {
     "type": "git",
@@ -34,9 +35,66 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
+    "asar": "^3.2.0",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
     "electron": "^30.0.9",
+    "electron-builder": "^24.13.3",
     "sass": "^1.77.6",
     "sass-loader": "^14.2.1",
-    "vite": "^5.2.0"
+    "vite": "^5.2.0",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "productName": "LinNotes",
+    "copyright": "Copyright © 2024 ljs",
+    "appId": "com.ljs.linnote",
+    "files": [
+      "**/*",
+      "!*.md",
+      "!.vscode",
+      "!.history",
+      "！src/assets",
+      "!index.html",
+      "!src/components",
+      "!src/pages",
+      "!src/router",
+      "!src/storage",
+      "!src/style",
+      "!src/*.vue",
+      "!src/main.js"
+    ],
+    "win": {
+      "icon": "./public/icon.png",
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "mac": {
+        "icon": "./public/icon.png",
+        "target": [
+          "dmg",
+          "zip"
+        ],
+      "darkModeSupport": false
+    },
+    "directories": {
+      "output": "build/${os}"
+    },
+    "extraResources": [
+      {
+        "from": "./public",
+        "to": "./public"
+      }
+    ],
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
   }
 }

@@ -1,12 +1,12 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import path from "path";
 
 // const { resolve } = require('path')
 import { resolve } from 'path'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
+  base: './',
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"),
@@ -20,9 +20,19 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html'),
-        notes: resolve(__dirname, 'notes/index.html')
+      output:{
+        entryFileNames: 'js/[name]-[hash].js',
+        chunkFileNames: 'js/[name]-[hash].js',
+        assetFileNames(assetInfo){
+          if (assetInfo.name.endsWith('.css')) {
+            return `css/[name]-[hash][extname]`
+          }
+          const imgExts = ['.png', '.jpeg', '.jpg', '.gif', '.svg', '.ico', '.webp']
+          if (imgExts.some(ext => assetInfo.name.endsWith(ext))) {
+              return `images/[name]-[hash][extname]`
+          }
+          return `assets/[name]-[hash][extname]`
+        }
       }
     }
   }

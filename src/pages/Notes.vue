@@ -24,7 +24,7 @@
 import Vditor from 'vditor'
 import 'vditor/dist/index.css'
 import '@/style/Scrollbar.css'
-import {ref, onMounted, onBeforeUnmount} from 'vue'
+import {ref, onMounted} from 'vue'
 import { useRoute } from 'vue-router'
 import _ from 'lodash'
 import TitleBar from '@/components/TitleBar.vue'
@@ -35,12 +35,12 @@ const route = useRoute()
 const noteID = Number(route.params.id)
 const createdTime = ref(new Date(noteID).toLocaleString())
 let title = ref(createdTime.value)
-
-let isComposing = ref(false)
-
 if (titleDiv.value) {
   titleDiv.value.innerText = title.value;
 }
+
+let isFirstEmpty = true
+let isComposing = ref(false)
 
 function updateNoteStore() {
   const content = vditor.value ? vditor.value.getValue() : '';
@@ -75,8 +75,6 @@ onMounted(() => {
       if (titleDiv.value) {
         titleDiv.value.innerText = note.title
       }
-      // 设置内容
-      // vditor.value.setValue(note.content)
       note_content = note.content
     }
   })
@@ -90,7 +88,12 @@ onMounted(() => {
       vditor.value.setValue(note_content,true)
     },
     input: (value) => {
-      if (value) {
+      //输入为空且是第一次输入为空，触发更新
+      if (value === '' && isFirstEmpty) {
+        updateNoteStore();
+        isFirstEmpty = false;
+      }else if(value !== ''){
+        isFirstEmpty = true;
         updateNoteStore();
       }
     },

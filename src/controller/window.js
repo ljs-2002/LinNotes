@@ -12,10 +12,9 @@ export function createMainWindow({ width, height, show, preload_dir, devTools, l
             preload: resolve(preload_dir, 'preload.mjs'),
         }
     })
-    // mainWindow.loadFile(loadFile)
     mainWindow.loadURL(loadFile)
     if (devTools) {
-        // mainWindow.webContents.openDevTools()
+        mainWindow.webContents.openDevTools()
     }
     mainWindow.on('minimize', (event) => {
         event.preventDefault()
@@ -47,7 +46,9 @@ export function createNotesWindow(loadFile, windowMap, preload_dir, handleClose)
     notes.once('ready-to-show', () => {
         notes.show()
     })
-    // notes.webContents.openDevTools()
+    if (process.env.NODE_ENV === 'development'){
+        notes.webContents.openDevTools()
+    }
     notes.once('close', (event) => {
         event.preventDefault()
         notes.close()

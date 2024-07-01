@@ -43,15 +43,20 @@ const useNoteStore = defineStore('noteStore', {
             //更新notes_list
             _.remove(this.notes_list, function (o) { return o.id === key })
             store.set(this.store_key, this.transformJson())
+            store.remove(`vditor-${key}`)
         },
         deleteAll() {
             this.notes.clear()
             this.notes_list = []
             store.set(this.store_key, "[]")
+            if(process.env.NODE_ENV === 'development'){
+                store.clearAll()
+            }
+            // store.clearAll()
         },
         load() {
             let to_load = store.get(this.store_key)
-            if (to_load === undefined || to_load === "[]" || to_load ===[]) {
+            if (to_load === undefined || to_load === null || to_load === "[]" || to_load ===[]) {
                 to_load = '{"notes":[],"notes_list":[]}'
             }
             let {notes, notes_list} = JSON.parse(to_load)

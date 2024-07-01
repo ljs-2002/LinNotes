@@ -1,8 +1,9 @@
 import { app, ipcMain } from 'electron'
+import { join, dirname } from 'path'
 import { createMainWindow, createNotesWindow, createModelWindow, getWindowId } from './src/controller/window.js'
 import { createMainMenu } from './src/controller/menu.js'
 import { createTray } from './src/controller/tray.js'
-import { MAIN_WINDOW_PARAM, NOTES_PRELOAD_DIR } from './src/config/param.js'
+import { MAIN_WINDOW_PARAM, NOTES_PRELOAD_DIR, NOTES_LOAD_FILE } from './src/config/param.js'
 
 const windowMap = new Map()
 const notesMap = new Map()
@@ -10,7 +11,6 @@ let mainWindow = null
 let mainWindowId = 0
 
 app.whenReady().then(() => {
-    console.log(NOTES_PRELOAD_DIR)
     ipcMain.handle('create-notes-window', (event,create_time) => {
         if (notesMap.has(create_time) && windowMap.has(notesMap.get(create_time))){
             return null
@@ -18,9 +18,8 @@ app.whenReady().then(() => {
         const handleClose = (id) => {
             windowMap.delete(id)
         }
-        // win = createNotesWindow(`http://localhost:4000/test${windowMap.size}/`, windowMap, NOTES_PRELOAD_DIR,handleClose)
-        let win = createNotesWindow(`http://localhost:4000/notes/${create_time}/`, windowMap, NOTES_PRELOAD_DIR,handleClose)
-        // win = createNotesWindow('./dist/notes/index.html',windowMap,NOTES_PRELOAD_DIR)
+        console.log(`${NOTES_LOAD_FILE}/${create_time}`)
+        let win = createNotesWindow(`${NOTES_LOAD_FILE}/${create_time}`, windowMap, NOTES_PRELOAD_DIR,handleClose)
 
         windowMap.set(win.webContents.id, win)
         notesMap.set(create_time, win.webContents.id)
@@ -75,7 +74,13 @@ app.whenReady().then(() => {
     windowMap.set(mainWindowId, mainWindow)
 
     //创建托盘
-    let tray = createTray(mainWindow, './src/assets/icon.png', 'LinNotes')
+    let icon_path;
+    if (process.env.NODE_ENV === 'development') {
+        icon_path = './public/icon.png'
+    }else{
+        icon_path = join(dirname(app.getPath('exe')), './resources/public/icon.png');
+    }
+    let tray = createTray(mainWindow, icon_path, 'LinNotes')
 })
 
 app.on('window-all-closed', () => {
