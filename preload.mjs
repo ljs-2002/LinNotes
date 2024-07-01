@@ -52,6 +52,12 @@ contextBridge.exposeInMainWorld('NoteOption', {
         ipcRenderer.on('reply-notes-content', (event, note) => {
             func(note)
         })
+    },
+    HandleShortCutCreateNote: (func) => {
+        ipcRenderer.on('shortcut-create-note', (event) => {
+            func()
+        })
+
     }
 })
 

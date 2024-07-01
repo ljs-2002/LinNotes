@@ -1,7 +1,7 @@
 {
   "name": "linnotes",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "desk notes software",
   "type": "module",
   "main": "main.js",
@@ -69,25 +69,31 @@
       "target": [
         "nsis",
         "zip"
+      ],
+      "extraResources": [
+        {
+          "from": "./public",
+          "to": "./public"
+        }
       ]
     },
     "mac": {
-        "icon": "./public/icon.png",
+        "icon": "./public/icon.icns",
         "target": [
           "dmg",
           "zip"
         ],
-      "darkModeSupport": false
+      "darkModeSupport": false,
+      "extraResources": [
+          {
+          "from": "./public",
+          "to": "."
+          }
+      ]
     },
     "directories": {
       "output": "build/${os}"
     },
-    "extraResources": [
-      {
-        "from": "./public",
-        "to": "./public"
-      }
-    ],
     "nsis": {
       "oneClick": false,
       "allowElevation": true,

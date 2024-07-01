@@ -12,7 +12,7 @@
     <div class="sticky-top">
       <TitleBar>
       <div contenteditable="true" class="note-title" ref="titleDiv" @compositionstart="handleCompositionStart"
-        @compositionend="handleCompositionEnd" @input="handleInput"></div>
+        @compositionend="handleCompositionEnd" @input="handleInput" @keydown.enter.prevent="handleEnter"></div>
       </TitleBar>
 <!--      <div class="note-created-time">{{ createdTime }}</div>-->
     </div>
@@ -45,6 +45,13 @@ let isComposing = ref(false)
 function updateNoteStore() {
   const content = vditor.value ? vditor.value.getValue() : '';
   window.NoteOption.SaveNotes(noteID, title.value, createdTime.value, content);
+}
+
+const handleEnter = () => {
+  // 当按下回车键时，将焦点转移到vditor中
+  if (vditor.value) {
+    vditor.value.focus()
+  }
 }
 
 const handleCompositionStart = () => {

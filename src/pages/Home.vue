@@ -18,7 +18,7 @@ const handleCreateNote = () => {
     noteStore.add(noteID, createTime, createTime, '')
   })
 }
-
+window.NoteOption.HandleShortCutCreateNote(handleCreateNote)
 const handleOpenNote = (noteID) => {
   window.WindowOption.CreateNotesWindow(noteID)
 }
@@ -38,7 +38,7 @@ onMounted(() => {
   <main class="note-list">
   <div class="note-list-title">
     <div>便签列表</div>
-    <button @click="noteStore.deleteAll()" >delete All</button>
+<!--    <button @click="noteStore.deleteAll()" >delete All</button>-->
   </div>
   <div class="note-list-area">
     <VueDraggable v-if="noteStore.notes_list.length" v-model="noteStore.notes_list" animation="150" target=".note-card-list">
@@ -55,7 +55,8 @@ onMounted(() => {
       </div>
     </VueDraggable>
     <div v-else class="empty-note-list">
-      点击下方+号创建新的便签
+      <div>点击下方+号创建新的便签</div>
+      <div>快捷键：Ctrl/Command + =</div>
     </div>
   </div>
     <button class="create-note-button" @click="handleCreateNote()">
@@ -93,6 +94,7 @@ onMounted(() => {
 
 .empty-note-list {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100%;
