@@ -78,17 +78,17 @@
       ]
     },
     "mac": {
-        "icon": "./ICON.icns",
-        "target": [
-          "dmg",
-          "zip"
-        ],
+      "icon": "./ICON.icns",
+      "target": [
+        "dmg",
+        "zip"
+      ],
       "darkModeSupport": false,
       "extraResources": [
-          {
+        {
           "from": "./public",
           "to": "."
-          }
+        }
       ]
     },
     "directories": {

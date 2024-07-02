@@ -85,8 +85,7 @@ let fontSize = computed(() => {
   justify-content: space-between;
   border: 2px solid black;
   border-radius: 10px;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin: 5px;
   padding: 2px;
   align-items: center;
 }
