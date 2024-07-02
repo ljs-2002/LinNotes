@@ -1,4 +1,4 @@
-import {app, BrowserWindow, ipcMain, globalShortcut} from 'electron'
+import {app, BrowserWindow, ipcMain, globalShortcut, screen} from 'electron'
 import {join, dirname} from 'path'
 import { createMainWindow, createNotesWindow, createModelWindow, getWindowId } from './src/controller/window.js'
 import { createMainMenu, createDockMenu } from './src/controller/menu.js'
@@ -6,8 +6,10 @@ import { createTray } from './src/controller/tray.js'
 import { MAIN_WINDOW_PARAM, NOTES_PRELOAD_DIR, NOTES_LOAD_FILE } from './src/config/param.js'
 const windowMap = new Map()
 const notesMap = new Map()
+const MIN_INTERVAL = 300;
 let mainWindow = null
 let mainWindowId = 0
+let lastShortcutTime = 0;
 
 function handleCreateNotesWindow(create_time) {
     if (notesMap.has(create_time) && windowMap.has(notesMap.get(create_time))){
@@ -16,8 +18,27 @@ function handleCreateNotesWindow(create_time) {
     const handleClose = (id) => {
         windowMap.delete(id)
     }
-    console.log(`${NOTES_LOAD_FILE}/${create_time}`)
-    let win = createNotesWindow(`${NOTES_LOAD_FILE}/${create_time}`, windowMap, NOTES_PRELOAD_DIR,handleClose)
+    let x,y
+    const currentWindow = BrowserWindow.getFocusedWindow();　//获取当前活动的浏览器窗口。
+
+    //如果当前活动的浏览器窗口不是Note窗口，就在屏幕中间打开Note窗口
+    if (currentWindow === null || currentWindow === mainWindow || !windowMap.has(currentWindow.webContents.id)){
+        const {width, height} = screen.getPrimaryDisplay().workAreaSize
+        x = (width - 320) / 2
+        y = (height - 240) / 2
+    }
+    //如果当前活动的浏览器窗口是Note窗口，就在当前Note窗口的右下角打开Note窗口
+    else{
+        const bounds = currentWindow.getBounds()
+        x = bounds.x + bounds.width + 10
+        y = bounds.y + bounds.height + 10
+        //若超出屏幕右下角，就在从屏幕左上角重新开始
+        if (x + 320 > screen.getPrimaryDisplay().workAreaSize.width){
+            x = 0
+            y = 0
+        }
+    }
+    let win = createNotesWindow(`${NOTES_LOAD_FILE}/${create_time}`, windowMap, NOTES_PRELOAD_DIR,handleClose,x,y)
 
     windowMap.set(win.webContents.id, win)
     notesMap.set(create_time, win.webContents.id)
@@ -121,7 +142,11 @@ app.whenReady().then(() => {
 
     //注册全局快捷键
     globalShortcut.register('CommandOrControl+=', () => {
-        mainWindow.webContents.send('shortcut-create-note')
+        const now = Date.now();
+        if (now - lastShortcutTime >= MIN_INTERVAL) {
+            mainWindow.webContents.send('shortcut-create-note');
+            lastShortcutTime = now;
+        }
     })
 }).catch(error=>{
     console.error(error)

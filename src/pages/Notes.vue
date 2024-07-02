@@ -71,6 +71,7 @@ const handleInput = _.debounce(() => {
     updateNoteStore();
   }
 }, 500)
+
 onMounted(() => {
   let note_content = ''
   window.NoteOption.RequireNoteContent(noteID)
@@ -93,6 +94,7 @@ onMounted(() => {
     // }
     after() {
       vditor.value.setValue(note_content,true)
+      vditor.value.focus()
     },
     input: (value) => {
       //输入为空且是第一次输入为空，触发更新

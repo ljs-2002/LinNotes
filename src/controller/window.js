@@ -30,10 +30,12 @@ export function createMainWindow({ width, height, show, preload_dir, devTools, l
     return mainWindow
 }
 
-export function createNotesWindow(loadFile, windowMap, preload_dir, handleClose) {
+export function createNotesWindow(loadFile, windowMap, preload_dir, handleClose, x, y) {
     let notes = new BrowserWindow({
         width: 320,
         height: 240,
+        x:x,
+        y:y,
         show: false,
         frame: false,
         webPreferences: {
