@@ -5,7 +5,6 @@ import test from '@/pages/test.vue'
 const routes = [
     {
         path: '/',
-        // component: () => import('@/pages/helloworld.vue')
         redirect: '/home'
     },
     {
