@@ -1,0 +1,108 @@
+name: Release Draft
+# 设置当push到main分支时触发
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest]  # 在 macOS 和 Windows 上运行
+        arch: [x64, arm64]  # 使用 x64 和 arm64 架构
+
+    steps:
+      # 检出仓库代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 设置 Node.js 环境
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.13.1'  # 指定 Node.js 版本
+
+      # 安装 yarn 包管理器
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      # 安装项目依赖
+      - name: Install dependencies
+        run: yarn install
+
+      # 运行构建命令
+      - name: Build the project
+        run: yarn build
+
+      # 打包项目
+      - name: Make the project
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: yarn make --${{ matrix.arch }}
+
+      # 上传构建文件作为工件（Artifacts）
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts-${{ matrix.os }}-${{ matrix.arch }}
+          path: |
+            build/win/*.zip
+            build/win/*.exe
+            build/mac/*.dmg
+            build/mac/*.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      # 检出仓库代码
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 创建下载文件的目录
+      - name: Create Download Dir
+        run: |
+          mkdir -p build/win
+          mkdir -p build/mac
+
+      # 下载先前上传的构建文件 macOS x64
+      - name: Download macOS x64 build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts-macos-latest-x64
+          path: build/mac
+
+      # 下载先前上传的构建文件 macOS arm64
+      - name: Download macOS arm64 build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts-macos-latest-arm64
+          path: build/mac
+
+      # 下载先前上传的构建文件 Windows x64
+      - name: Download Windows x64 build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts-windows-latest-x64
+          path: build/win
+
+      - name: Download Windows arm64 build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts-windows-latest-arm64
+          path: build/win
+
+
+      # 创建 GitHub Release 草稿
+      - name: Create GitHub Release Draft
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/win/**
+            build/mac/**
+          draft: true  # 设置发布为草稿
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}  # GitHub 提供的 token 用于认证
