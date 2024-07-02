@@ -8,15 +8,15 @@
  * Copyright (c) 2024 by LinJiasheng, All Rights Reserved. 
 -->
 <template>
-  <main class="note-container">
-    <div class="sticky-top">
+  <main class="note-container" :style="{backgroundColor: color,borderColor: color}">
+    <div class="sticky-top" :style="{backgroundColor: darken_color }">
       <TitleBar>
       <div contenteditable="true" class="note-title" ref="titleDiv" @compositionstart="handleCompositionStart"
         @compositionend="handleCompositionEnd" @input="handleInput" @keydown.enter.prevent="handleEnter"></div>
       </TitleBar>
 <!--      <div class="note-created-time">{{ createdTime }}</div>-->
     </div>
-    <div id='vditor-area' class="vditor-container"></div>
+    <div id='vditor-area' class="vditor-container" :style="{backgroundColor: color,borderColor: color}"></div>
   </main>
 </template>
 
@@ -24,7 +24,7 @@
 import Vditor from 'vditor'
 import 'vditor/dist/index.css'
 import '@/style/Scrollbar.css'
-import {ref, onMounted} from 'vue'
+import {ref, onMounted, onUnmounted} from 'vue'
 import { useRoute } from 'vue-router'
 import _ from 'lodash'
 import TitleBar from '@/components/TitleBar.vue'
@@ -42,9 +42,40 @@ if (titleDiv.value) {
 let isFirstEmpty = true
 let isComposing = ref(false)
 
+//TODO: 改变便签颜色
+let color = ref('#ffffff')
+let darken_color = ref(darken(color.value, 0.1))
+console.log(darken_color.value)
+function darken(color, percent) {
+  // 解析颜色
+  let r = parseInt(color.slice(1, 3), 16);
+  let g = parseInt(color.slice(3, 5), 16);
+  let b = parseInt(color.slice(5, 7), 16);
+
+  // 计算减少的值
+  const decrease = Math.floor(255 * percent);
+
+  // 根据减少的值计算新的颜色值
+  r = Math.max(0, r - decrease);
+  g = Math.max(0, g - decrease);
+  b = Math.max(0, b - decrease);
+
+  // 转换回十六进制字符串
+  const rr = r.toString(16).padStart(2, '0');
+  const gg = g.toString(16).padStart(2, '0');
+  const bb = b.toString(16).padStart(2, '0');
+
+  return `#${rr}${gg}${bb}`;
+}
+
 function updateNoteStore() {
   const content = vditor.value ? vditor.value.getValue() : '';
   window.NoteOption.SaveNotes(noteID, title.value, createdTime.value, content);
+}
+
+function checkToDo() {
+  const content = vditor.value ? vditor.value.getValue() : '';
+  window.NoteOption.CheckToDo(noteID, content);
 }
 
 const handleEnter = () => {
@@ -70,7 +101,7 @@ const handleInput = _.debounce(() => {
     // 更新笔记内容
     updateNoteStore();
   }
-}, 500)
+}, 100)
 
 onMounted(() => {
   let note_content = ''
@@ -89,9 +120,6 @@ onMounted(() => {
   vditor.value = new Vditor('vditor-area', {
     height: '100%',
     toolbar: [],
-    // blur: () => {
-    //   updateNoteStore();
-    // }
     after() {
       vditor.value.setValue(note_content,true)
       vditor.value.focus()
@@ -110,11 +138,16 @@ onMounted(() => {
       "id": `vditor-${noteID.toString()}`
     },
   })
+  document.addEventListener('click', checkToDo);
+})
+
+onUnmounted(() => {
+  checkToDo()
+  document.removeEventListener('click', checkToDo);
 })
 
 </script>
 <style scoped lang="scss">
-$color: #f0f0f0;
 .note-container {
   display: flex;
   flex-direction: column;
@@ -126,8 +159,6 @@ $color: #f0f0f0;
 .sticky-top {
   position: sticky;
   top: 0;
-  /* 背景颜色为主题色加深一点*/
-  background-color: darken($color, 0%);
   z-index: 1; /* 确保置顶内容总是在其他内容之上 */
 }
 
@@ -140,6 +171,8 @@ $color: #f0f0f0;
 .vditor {
   border: none !important;
   --border-color: transparent !important;
+  --textarea-background-color: transparent !important;
+  --panel-background-color: transparent !important;
 }
 
 .note-title {

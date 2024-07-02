@@ -37,6 +37,14 @@ contextBridge.exposeInMainWorld('NoteOption', {
             func(key, title, create_time, content)
         })
     },
+    CheckToDo: (key,content) => {
+        ipcRenderer.invoke('check-todo', key, content)
+    },
+    HandleCheckToDo: (func) => {
+        ipcRenderer.on('check-todo', (event, key, content) => {
+            func(key, content)
+        })
+    },
     RequireNoteContent: (note_id) => {
         ipcRenderer.invoke('require-note-content', note_id)
     },

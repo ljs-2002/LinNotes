@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
 import store from 'store2'
 import _ from "lodash";
 
@@ -21,7 +21,13 @@ const useNoteStore = defineStore('noteStore', {
             }
             this.notes.set(key, note)
             //更新notes_list
-            this.notes_list.push({ 'noteTitle': title, 'createTime': create_time , 'id': key})
+            this.notes_list.push({
+                'noteTitle': title,
+                'createTime': create_time,
+                'id': key,
+                'star': false,
+                'todo': false
+            })
             store.set(this.store_key, this.transformJson())
             // console.log(key,note)
         },
@@ -34,14 +40,33 @@ const useNoteStore = defineStore('noteStore', {
             }
             this.notes.set(key, note)
             //更新notes_list
-            _.find(this.notes_list, function (o) { return o.id === key }).noteTitle = title
+            _.find(this.notes_list, function (o) {
+                return o.id === key
+            }).noteTitle = title
             store.set(this.store_key, this.transformJson())
             // console.log(key, note)
+        },
+        star(key) {
+            let note = this.notes.get(key)
+            note.star = !note.star
+            _.find(this.notes_list, function (o) {
+                return o.id === key
+            }).star = note.star
+            store.set(this.store_key, this.transformJson())
+        },
+        todo(key,content) {
+            let todo = content.match(/[-*]\s\[\s]\s/g)
+            _.find(this.notes_list, function (o) {
+                return o.id === key
+            }).todo = todo !== null
+            store.set(this.store_key, this.transformJson())
         },
         delete(key) {
             this.notes.delete(key)
             //更新notes_list
-            _.remove(this.notes_list, function (o) { return o.id === key })
+            _.remove(this.notes_list, function (o) {
+                return o.id === key
+            })
             store.set(this.store_key, this.transformJson())
             store.remove(`vditor-${key}`)
         },
@@ -49,14 +74,14 @@ const useNoteStore = defineStore('noteStore', {
             this.notes.clear()
             this.notes_list = []
             store.set(this.store_key, "[]")
-            if(process.env.NODE_ENV === 'development'){
+            if (process.env.NODE_ENV === 'development') {
                 store.clearAll()
             }
             // store.clearAll()
         },
         load() {
             let to_load = store.get(this.store_key)
-            if (to_load === undefined || to_load === null || to_load === "[]" || to_load ===[]) {
+            if (to_load === undefined || to_load === null || to_load === "[]" || to_load === []) {
                 to_load = '{"notes":[],"notes_list":[]}'
             }
             let {notes, notes_list} = JSON.parse(to_load)

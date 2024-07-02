@@ -6,7 +6,7 @@ import { createTray } from './src/controller/tray.js'
 import { MAIN_WINDOW_PARAM, NOTES_PRELOAD_DIR, NOTES_LOAD_FILE } from './src/config/param.js'
 const windowMap = new Map()
 const notesMap = new Map()
-const MIN_INTERVAL = 300;
+const MIN_INTERVAL = 100;
 let mainWindow = null
 let mainWindowId = 0
 let lastShortcutTime = 0;
@@ -66,6 +66,9 @@ app.whenReady().then(() => {
     })
     ipcMain.handle('save-notes', (event, key, title, create_time, content) => {
         mainWindow.webContents.send('save-notes', key, title, create_time, content)
+    })
+    ipcMain.handle('check-todo', (event, key, content) => {
+        mainWindow.webContents.send('check-todo', key, content)
     })
     ipcMain.handle('create-model-window', () => {
         let win = createModelWindow('./renderer/settings.html', mainWindow, windowMap)

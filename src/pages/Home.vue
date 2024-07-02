@@ -23,10 +23,18 @@ const handleOpenNote = (noteID) => {
   window.WindowOption.CreateNotesWindow(noteID)
 }
 
+window.NoteOption.HandleCheckToDo((noteID, content)=>{
+  noteStore.todo(noteID, content)
+})
+
 const handleDeleteNote = (noteID) => {
   window.WindowOption.DeleteWindow(noteID)
   noteStore.delete(noteID)
 }
+
+const handleTitleClick = (key) => {
+  noteStore.star(key)
+};
 
 onMounted(() => {
   noteStore.load()
@@ -49,8 +57,11 @@ onMounted(() => {
             :noteTitle="note.noteTitle"
             :createTime="note.createTime"
             :noteID="note.id"
+            :isStar="note.star"
+            :isTODO="note.todo"
             :handleOpenNote="handleOpenNote"
             :handleDeleteNote="handleDeleteNote"
+            :handleTitleClick="handleTitleClick"
         />
       </div>
     </VueDraggable>
