@@ -1,7 +1,7 @@
 import {app, BrowserWindow, ipcMain, globalShortcut} from 'electron'
-import {join, dirname, resolve} from 'path'
+import {join, dirname} from 'path'
 import { createMainWindow, createNotesWindow, createModelWindow, getWindowId } from './src/controller/window.js'
-import { createMainMenu } from './src/controller/menu.js'
+import { createMainMenu, createDockMenu } from './src/controller/menu.js'
 import { createTray } from './src/controller/tray.js'
 import { MAIN_WINDOW_PARAM, NOTES_PRELOAD_DIR, NOTES_LOAD_FILE } from './src/config/param.js'
 const windowMap = new Map()
@@ -97,6 +97,11 @@ app.whenReady().then(() => {
     mainWindow.setMenu(createMainMenu(mainWindow, windowMap))
     mainWindowId = mainWindow.webContents.id
     windowMap.set(mainWindowId, mainWindow)
+    //mac Dock图标和菜单
+    if (process.platform === 'darwin'){
+        app.dock.setMenu(createDockMenu(mainWindow))
+    }
+
 
     //创建托盘
     let icon_path;
@@ -138,6 +143,8 @@ app.on('activate', () => {
             mainWindow.setMenu(createMainMenu(mainWindow, windowMap))
             mainWindowId = mainWindow.webContents.id
             windowMap.set(mainWindowId, mainWindow)
+        }else{
+            mainWindow.show();
         }
     }
 })
